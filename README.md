@@ -110,5 +110,5 @@ This tweet words cloud gives indication that flights were delayed and/or cancele
 
 ### Summary: Sentiment over time
 
-The application of a sentiment classifier seem to be applicable to highlight sentiment-involved social media events. Such an application may be useful to monitor social media and to improve operations reaction to an event as it is happening. This may also be useful to recognise opportunities when such sentiment driven events are assosiated with a business competitor.
+The application of a sentiment classifier seem to be applicable to highlight sentiment-involved social media events. Such an application may be useful to monitor social media and to improve any reaction to an event as it is happening. This may also be useful to recognise opportunities when such sentiment driven events are assosiated with a business competitor.
 
