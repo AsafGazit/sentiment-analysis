@@ -7,13 +7,13 @@ The following details the training of a Naive Bayes classifier for tweets sentim
 1. The Sentiment140 dataset
 A collection of tweets and their associated sentiment labels ('positive'/'negative'). 
 http://help.sentiment140.com/
-The training dataset includes 1600000 tweets and their assosiated sentiment label.
+The training dataset includes 1,600,000 tweets and their assosiated sentiment label.
 
 2. Kaggle’s Twitter US Airline Sentiment dataset
 Analyze how travelers in February 2015 expressed their feelings on Twitter: A sentiment analysis job about the problems of each major U.S. airline.
 https://www.kaggle.com/crowdflower/twitter-airline-sentiment
 The tweets used for testing have confidence (of the label assosiated) higher than 0.9 and the classifier recognised classes ('positive' or 'negative', excluding 'neutral').
-The dataset includes 8908 tweets (that confirm with the requirements), of which 7391 labeled negative and 1517 positive.
+The dataset includes 8,908 tweets (that confirm with the requirements), of which 7,391 labeled negative and 1,517 positive.
 
 ### Preprocessing
 This part aims to generalise features and reduce the dimentionality of the model. 
