@@ -100,11 +100,11 @@ The plot also shows a spike in the negative sentiment between the 22nd and the 2
 
 To explore the sentiment spike related tweets without reading multiple tweets, I extract the tweets related and produce two word clouds: one for the hashtags and one for the tweets' content.
 
-<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/hashtags_cloud.jpg" alt="confusion matrix" width="30%" height="30%">
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/hashtags_cloud_nv.jpg" alt="confusion matrix" width="30%" height="30%">
 
 This hashtags cloud gives indication that two airlines are associated with this negative tweet surge: Jet Blue and United Airlines. 
 
-<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/words_clean_cloud.jpg" alt="confusion matrix" width="30%" height="30%">
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/words_clean_cloud_nv.jpg" alt="confusion matrix" width="30%" height="30%">
 
 This tweet words cloud gives indication that flights were delayed and/or canceled. It gives an indication to a temporal disturbance of some sort.
 
