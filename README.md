@@ -92,7 +92,7 @@ The prediction accuracy of the classifier on US Airline Sentiment dataset is 87.
 Now, lets plot the sentiment over time using the timestamp available in this dataset.
 The following plot shows the twitter sentiment over the time (tweet timestamp). It details the actual and predicted labels counts per hour.
 
-<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/sentiment_over_time.jpg" alt="confusion matrix" width="60%" height="60%">
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/sentiment_over_time.jpg" alt="confusion matrix" width="80%" height="80%">
 
 The labels and the classifier predictions trends over time looks very similar, which is somewhat expected at a 87.53% accuracy rate (RMSE=5.098). 
 The predicted and actual sentiment count over time show the daily seasonality of tweets. Those seem to be correlated with daytime, on which most people tweet and travel. 
@@ -100,11 +100,11 @@ The plot also shows a spike in the negative sentiment between the 22nd and the 2
 
 To explore the sentiment spike related tweets without reading multiple tweets, I extract the tweets related and produce two word clouds: one for the hashtags and one for the tweets' content.
 
-<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/hashtags_cloud.jpg" alt="confusion matrix" width="60%" height="60%">
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/hashtags_cloud.jpg" alt="confusion matrix" width="30%" height="30%">
 
 This hashtags cloud gives indication that two airlines are associated with this negative tweet surge: Jet Blue and United Airlines. 
 
-<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/words_clean_cloud.jpg" alt="confusion matrix" width="60%" height="60%">
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/words_clean_cloud.jpg" alt="confusion matrix" width="30%" height="30%">
 
 This tweet words cloud gives indication that flights were delayed and/or canceled. It gives an indication to a temporal disturbance of some sort.
 
