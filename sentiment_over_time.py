@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created by Asaf Gazit
-# github address
+github address https://github.com/AsafGazit/sentiment-analysis/blob/master/sentiment_over_time.py
 
-Sentiment analysis over time:
-text
+Sentiment analysis over time
 """
 
 import pandas as pd
