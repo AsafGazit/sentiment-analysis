@@ -110,3 +110,4 @@ This tweet words cloud gives indication that flights were delayed and/or cancele
 
 The application of a sentiment classifier seem to be applicable to highlight sentiment-involved social media events. Such an application may be useful to monitor social media and to improve any reaction to an event as it is happening. This may also be useful to recognise opportunities when such sentiment driven events are assosiated with a business competitor.
 
+The code for the described above can be found [here.](https://github.com/AsafGazit/sentiment-analysis/blob/master/sentiment_over_time.py)
