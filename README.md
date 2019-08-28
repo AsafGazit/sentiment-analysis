@@ -175,7 +175,7 @@ The following plot shows the twitter sentiment over the time (tweet timestamp). 
 
 The labels and the classifier predictions trends over time looks very similar, which is somewhat expected at a 87.53% accuracy rate (RMSE=4.808 rooted error tweets/hour). 
 The predicted and actual sentiment count over time show the daily seasonality of tweets. Those seem to be correlated with daytime, when most people tweet and travel. 
-The plot also shows a spike in the negative sentiment between the 22nd and the 23rd of February (marked in the previous figure).
+The plot also shows a spike in the negative sentiment between the 22nd and the 23rd of February (marked in the previous figure). During this spike, the sentiments ratio is 0.833333 (negative) to 0.166667 (positive) or, in other words, 5:1 negative to positive tweets ratio.
 
 To explore the sentiment spike related tweets without reading multiple tweets, I extract the tweets related and produce two word clouds: one for the hashtags and one for the tweets' content.
 
