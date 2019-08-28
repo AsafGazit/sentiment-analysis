@@ -60,7 +60,7 @@ The baseline reference will be a sentiment classifier for text (not tweets) from
 
 ### Splitting
 0.2 : test set = 320,000 tweets.
-0.8 : train set = 960,000 tweets.
+0.8 : train set = 1,280,000‬ tweets.
 1 : total of 1,600,000 tweets
 
 ### NLTK classifiers and baseline
@@ -73,7 +73,7 @@ The baseline reference is the sentiment classifier for text (not tweets) from th
 
 ### Results
 
-<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/resultsbar.png" alt="Bar chart accuracy" width="45%" height="30%">
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/resultsbar.PNG" alt="Bar chart accuracy" width="45%" height="30%">
 
 The trained classifiers perform similarly (76%-77% accuracy) and well above the baseline classifier.
 
