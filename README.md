@@ -1,108 +1,189 @@
 ## Tweets sentiment analysis and “sentiment events” over time
 
 ### Overview
-The following details the training of a Naive Bayes classifier for tweets sentiment analysis. The classifier is then used on a second dataset, which contains the twitter timestamp, to examine if sentiment events may be derived using such classifier.
+The following compares a two classifiers from NLTK package for tweets sentiment analysis. The classifiers are then applied to predict a second tweets dataset. The second dataset contains the tweet’s timestamp which is used to examine if sentiment “events” may be derived using such classifier.
 
 ### Datasets
-1. The Sentiment140 dataset
-A collection of tweets and their associated sentiment labels ('positive'/'negative'). The training dataset includes 1,600,000 tweets and their assosiated sentiment label.
-http://help.sentiment140.com/
+1.The Sentiment140 dataset A collection of tweets and their associated sentiment labels ('positive'/'negative'). The training dataset includes 1,600,000 tweets and their assosiated sentiment label. http://help.sentiment140.com/
+This dataset is used for training, validation and testing of classifiers.
 
-2. Kaggle’s Twitter US Airline Sentiment dataset
-Analyze how travelers in February 2015 expressed their feelings on Twitter: A sentiment analysis job about the problems of each major U.S. airline. The tweets used for testing have confidence (of the label assosiated) higher than 0.9 and the classifier recognised classes ('positive' or 'negative', excluding 'neutral').
-The dataset includes 8,908 tweets (that confirm with the requirements), of which 7,391 labeled negative and 1,517 positive.
-https://www.kaggle.com/crowdflower/twitter-airline-sentiment
+2.Kaggle’s Twitter US Airline Sentiment dataset Analyze how travelers in February 2015 expressed their feelings on Twitter: A sentiment analysis job about the problems of each major U.S. airline. https://www.kaggle.com/crowdflower/twitter-airline-sentiment
+This dataset will be used to examine sentiment over time.
+
+### Classes
+The Sentiment140 used contains 1,600,000 tweets labeled into two classes: 
+positive and negative (sentiment). Each class contains 800,000 tweets.
+
+Of the US airline dataset, only tweets with confidence higher than 0.9 and 'positive' or 'negative' classes (excluding 'neutral') are used. Confirming with those requirements are 8,908 tweets, of which 7,391 labeled negative and 1,517 positive.
 
 ### Preprocessing
 This part aims to generalise features and reduce the dimentionality of the model. 
 The following steps has been applied as part of the preprocessing:
-1. Removal of Twitter handles (usernames).
-2. Removal of non-alphanumeric characters.
-3. Removal of short words (less than 4 characters).
-4. Stemming.
-5. Casting to a feature vector (for NB classifier training: tuple with features {'feature_word':True} and the sentiment label).
+1. Removing URLs
+2. Removing Usernames
+3. Removing characters that are not letters or numbers
+4. Removing stopwords and lowercase words
+5. Removing words that are less than 3 characters long
 
-The following python function takes a twitter dataframe and applies the described method:
+The following python function takes a twitter dataframe and applies the described preprocessing:
 
 ```python
-def preprocess_tweets(filtered_df, labels=True):
-    def remove_pattern(input_txt, pattern):
-        r = re.findall(pattern, input_txt)
-        for i in r:
-            input_txt = re.sub(i, '', input_txt)
-        return input_txt  
-    
-    def word_feats(words):
+def preprocess_tweets(tweets_list):
+    split_tweets = [re.sub('((www\.[^\s]+)|(https?://[^\s]+))',' ',tweet) for tweet in tweets_list]
+    split_tweets = [re.sub('@[^\s]+',' ',tweet) for tweet in split_tweets]
+    split_tweets = [re.sub('[^a-zA-Z0-9#]',' ',tweet) for tweet in split_tweets]
+    sw_list=[re.sub("'","",stopword) for stopword in stopwords.words('english')]
+    clean_tweets=[' '.join(np.array(tweet.lower().split(' '))[~np.isin(tweet.lower().split(' '),sw_list)]) for tweet in split_tweets]
+    result=[' '.join([word for word in tweet.split(' ') if len(word)>2]) for tweet in clean_tweets]
+    return result
+```
+
+### Processing
+For NLTK classifiers, each observation should be formalised as a tuple with features {'feature_word':True} and the sentiment label.
+
+```python
+def word_feats(words):
         return dict([(word, True) for word in words])
-    
-    filtered_df.loc[:,'tidy_tweet'] = np.vectorize(remove_pattern)(filtered_df['tweet'], '@[\w]*')
-    filtered_df.loc[:,'tidy_tweet'] = filtered_df['tidy_tweet'].str.replace('[^a-zA-Z0-9#]', ' ')
-    filtered_df.loc[:,'tidy_tweet'] = filtered_df['tidy_tweet'].apply(lambda x: ' '.join([w for w in x.split() if len(w)>3]))
-    tokenized_tweet = filtered_df['tidy_tweet'].apply(lambda x: x.split())
-    tokenized_tweet = tokenized_tweet.apply(lambda x: [ps.stem(i) for i in x]) # stemming  
-    tokenized_tweet = tokenized_tweet.apply(lambda x: word_feats(x)) # word features  
-    filtered_df.loc[:,'tidy_tweet'] = tokenized_tweet
-    if(labels==True):
-        return [tuple(x) for x in filtered_df.loc[:,['tidy_tweet','sentiment']].values]
-    else:
-        return filtered_df.loc[:,'tidy_tweet'].values
 ```
-
-### Training and testing the classifier
-
-The classifier trained is NLTK's Naive Bayes classifier.
+And
 ```python
-from nltk.classify import NaiveBayesClassifier
-classifier = NaiveBayesClassifier.train(traindata_processed_features)
+[word_feats(preprocessed_tweet.split()) for preprocessed_tweet in preprocessed_data]
 ```
 
-The test set contains 359 samples, of which:
-182 have positive sentiment labels and 177 have negative sentiment labels.
+NLTK classifiers and baseline
 
-The prediction accuracy of the classifier on test set is 78.55% (score: 0.7855153203342619).
+Two classifiers from the NLTK package are trained and tested:
+-Naive Bayes
+-Maximum Entropy
 
-<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/confusion_matrix_plot.jpg" alt="confusion matrix" width="60%" height="60%">
+The baseline reference will be a sentiment classifier for text (not tweets) from the Pattern.en package.
 
-For the test dataset, the classifier tend to predicts positive sentiments. Overall, not a bad score result.
+### Splitting
+0.2 : test set = 320,000 tweets.
+0.8 : train set = 960,000 tweets.
+1 : total of 1,600,000 tweets
 
-Most Informative Features:
+### NLTK classifiers and baseline
+
+Two classifiers from the NLTK package are trained and tested:
+-Naive Bayes
+-Maximum Entropy
+
+The baseline reference is the sentiment classifier for text (not tweets) from the Pattern.en package.
+
+### Results
+
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/resultsbar.png" alt="Bar chart accuracy" width="45%" height="30%">
+
+The trained classifiers perform similarly (76%-77% accuracy) and well above the baseline classifier.
+
+### Confusion matrix
+
+Naive Bayes on test set
+
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/NB_clf_CM.png" alt="Bar chart accuracy" width="60%" height="60%">
+
 ```
-              tweeteradd = True           positi : negati =    553.7 : 1.0
-                dividend = True           positi : negati =     57.0 : 1.0
-                  sadfac = True           negati : positi =     40.1 : 1.0
-                 fuzzbal = True           positi : negati =     39.8 : 1.0
-                  farrah = True           negati : positi =     39.0 : 1.0
-                 whyyyyi = True           negati : positi =     38.3 : 1.0
-                     owi = True           negati : positi =     34.6 : 1.0
-               sharehold = True           positi : negati =     33.4 : 1.0
-                    #tag = True           negati : positi =     32.3 : 1.0
-                  boohoo = True           negati : positi =     30.5 : 1.0
+              precision    recall  f1-score   support
+
+    negative       0.74      0.81      0.77    160046
+    positive       0.79      0.72      0.75    159954
+
+   micro avg       0.76      0.76      0.76    320000
+   macro avg       0.76      0.76      0.76    320000
+weighted avg       0.76      0.76      0.76    320000
 ```
 
-Perhaps not so surprising to find that the most positive informative indication is assosiated with someone adding you ('tweeteradd'), with a positive to negative ratio of 553.7 to 1.0. On the other side, 'sadfac'(sadface) is the most informative negative feature with a ratio of 40 to 1.
+Most informative features:
+```
+                 sadface = True           negati : positi =     69.7 : 1.0
+                     447 = True           negati : positi =     51.8 : 1.0
+                  farrah = True           negati : positi =     44.7 : 1.0
+                     os3 = True           negati : positi =     41.7 : 1.0
+                    owie = True           negati : positi =     41.7 : 1.0
+             shareholder = True           positi : negati =     41.0 : 1.0
+                 unloved = True           negati : positi =     37.8 : 1.0
+              recommends = True           positi : negati =     35.0 : 1.0
+                 saddens = True           negati : positi =     32.6 : 1.0
+                fuzzball = True           positi : negati =     32.6 : 1.0
+```
 
-### Exploring the US Airline Sentiment dataset
+Maximum Entropy on test set
 
-The prediction accuracy of the classifier on US Airline Sentiment dataset is 87.53% (score: 0.8753929052537045). A higher accuracy score than the test set accuracy. This may be as people tend to be expressive when tweeting in regards to airlines, especially when complaining or when something goes wrong.  
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/ME_clf_CM.png" alt="Bar chart accuracy" width="60%" height="60%">
 
-<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/confusion_matrix_plot_usa.jpg" alt="confusion matrix" width="60%" height="60%">
+```
+              precision    recall  f1-score   support
 
-Now, lets plot the sentiment over time using the timestamp available in this dataset.
+    negative       0.77      0.77      0.77    160046
+    positive       0.77      0.77      0.77    159954
+
+   micro avg       0.77      0.77      0.77    320000
+   macro avg       0.77      0.77      0.77    320000
+weighted avg       0.77      0.77      0.77    320000
+```
+
+Most informative features:
+```
+  -5.265 sadface==True and label is 'positive'
+  -4.839 triste==True and label is 'positive'
+   4.526 #sickfriday==True and label is 'negative'
+  -4.404 fuzzball==True and label is 'negative'
+  -4.368 whyyyyy==True and label is 'positive'
+   4.329 prowd==True and label is 'positive'
+  -4.193 fome==True and label is 'positive'
+  -4.191 sadd==True and label is 'positive'
+  -4.138 backache==True and label is 'positive'
+  -4.118 tummyache==True and label is 'positive'
+```
+
+Baseline (Pattern.en)
+
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/BL_clf_CM.png" alt="Bar chart accuracy" width="60%" height="60%">
+
+```
+              precision    recall  f1-score   support
+
+    negative       0.76      0.30      0.43    160046
+    positive       0.56      0.91      0.70    159954
+
+   micro avg       0.60      0.60      0.60    320000
+   macro avg       0.66      0.60      0.56    320000
+weighted avg       0.66      0.60      0.56    320000
+```
+
+The baseline classifier seem to have a tendency to predict a negative sentiment. The overall accuracy is 60.4%. Not much better than the 50% of random choice.
+
+
+### Applying the sentiment classifier on tweets time series : exploring the US Airline Sentiment dataset
+
+The US Airlines Sentiment dataset is also labeled for sentiment. 
+The Naive Bayes and Maximum Entropy trained classifiers prediction accuracy on the dataset are 87.91% and 83.6%, respectively. Those scores are higher than found testing the test set. This may be as people tend to be expressive when tweeting in regards to airlines, especially when complaining or when something goes wrong.  
+
+Naive Bayes on US Airline Sentiment
+
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/NBusa_clf_CM.png" alt="confusion matrix" width="60%" height="60%">
+
+Maximum Entropy on US Airline Sentiment
+
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/MEusa_clf_CM.png" alt="confusion matrix" width="60%" height="60%">
+
+Now, lets plot the sentiment over time using the timestamp.
 The following plot shows the twitter sentiment over the time (tweet timestamp). It details the actual and predicted labels counts per hour.
 
 <img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/sentiment_over_time.jpg" alt="confusion matrix" width="80%" height="80%">
 
-The labels and the classifier predictions trends over time looks very similar, which is somewhat expected at a 87.53% accuracy rate (RMSE=5.098). 
+The labels and the classifier predictions trends over time looks very similar, which is somewhat expected at a 87.53% accuracy rate (RMSE=4.808 rooted error tweets/hour). 
 The predicted and actual sentiment count over time show the daily seasonality of tweets. Those seem to be correlated with daytime, when most people tweet and travel. 
 The plot also shows a spike in the negative sentiment between the 22nd and the 23rd of February (marked in the previous figure).
 
 To explore the sentiment spike related tweets without reading multiple tweets, I extract the tweets related and produce two word clouds: one for the hashtags and one for the tweets' content.
 
-<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/hashtags_cloud_nv.jpg" alt="confusion matrix" width="30%" height="30%">
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/hashtags_cloud.jpg" alt="confusion matrix" width="30%" height="30%">
 
 This hashtags cloud gives indication that two airlines are associated with this negative tweet surge: Jet Blue and United Airlines. 
 
-<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/words_clean_cloud_nv.jpg" alt="confusion matrix" width="30%" height="30%">
+<img src="https://github.com/AsafGazit/sentiment-analysis/blob/master/img/words_clean_cloud.jpg" alt="confusion matrix" width="30%" height="30%">
 
 This tweet words cloud gives indication that flights were delayed and/or canceled. It gives an indication to a temporal disturbance of some sort.
 
